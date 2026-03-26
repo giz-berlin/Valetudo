@@ -4,6 +4,10 @@ class BasicControlCapabilityRouter extends CapabilityRouter {
     initRoutes() {
         const methodMap = {
             "start": () => {
+                const cleaning_history = this.config.get("cleaning_history");
+                cleaning_history.append(this.capability.robot.state.map);
+                this.config.set("cleaning_history", cleaning_history);
+                this.config.persist()
                 return this.capability.start();
             },
             "stop": () => {

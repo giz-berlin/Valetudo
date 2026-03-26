@@ -11,11 +11,13 @@ class RobotRouter {
      *
      * @param {object} options
      * @param {import("../core/ValetudoRobot")} options.robot
+     * @param {import("../Configuration")} options.config
      * @param {*} options.validator
      */
     constructor(options) {
         this.robot = options.robot;
         this.router = express.Router({mergeParams: true});
+        this.config = options.config;
 
         this.validator = options.validator;
 
@@ -58,6 +60,7 @@ class RobotRouter {
             }
         });
 
+        // TODO
         this.router.get("/state/map", async (req, res) => {
             try {
                 res.json(this.robot.state.map);
@@ -69,7 +72,8 @@ class RobotRouter {
 
         this.router.use("/capabilities/", new CapabilitiesRouter({
             robot: this.robot,
-            validator: this.validator
+            validator: this.validator,
+            config: this.config,
         }).getRouter());
     }
 
