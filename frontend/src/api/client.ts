@@ -694,6 +694,14 @@ export const fetchValetudoEvents = async (): Promise<Array<ValetudoEvent>> => {
         });
 };
 
+export const fetchValetudoEvent = async (id: string): Promise<ValetudoEvent> => {
+    return valetudoAPI
+        .get<ValetudoEvent>(`/events/${id}`)
+        .then(({ data }) => {
+            return data;
+        });
+};
+
 export const sendValetudoEventInteraction = async (interaction: ValetudoEventInteractionContext): Promise<void> => {
     await valetudoAPI
         .put(`/events/${interaction.id}/interact`, interaction.interaction)

@@ -1,3 +1,4 @@
+import { RawMapData } from "./RawMapData";
 import {AttachmentStateAttributeType, DockComponentStateAttributeType} from "./RawRobotState";
 
 export enum Capability {
@@ -384,6 +385,7 @@ export interface ValetudoEvent {
     type?: string;
     subType?: string;
     message?: string;
+    mapState?: RawMapData
 }
 
 export interface ValetudoEventInteraction {

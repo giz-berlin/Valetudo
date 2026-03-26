@@ -148,6 +148,7 @@ import {
     fetchAutoEmptyDockAutoEmptyDuration,
     sendAutoEmptyDockAutoEmptyDuration,
     fetchAutoEmptyDockAutoEmptyDurationControlProperties,
+    fetchValetudoEvent,
 } from "./client";
 import {
     PresetSelectionState,
@@ -222,6 +223,7 @@ enum QueryKey {
     Timers = "timers",
     TimerProperties = "timer_properties",
     ValetudoEvents = "valetudo_events",
+    ValetudoEvent = "valetudo_event",
     Log = "log",
     LogLevel = "log_level",
     KeyLockInformation = "key_lock",
@@ -973,6 +975,15 @@ export const useValetudoEventsQuery = () => {
 
         staleTime: 30_000,
         refetchInterval: 30_000
+    });
+};
+
+export const useValetudoEventQuery = (id: string) => {
+    return useQuery( {
+        queryKey: [QueryKey.ValetudoEvent, String],
+        queryFn: () => {
+            return fetchValetudoEvent(id);
+        }
     });
 };
 

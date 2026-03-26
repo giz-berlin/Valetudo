@@ -4,6 +4,7 @@ import Consumables from "./Consumables";
 import ManualControl from "./ManualControl";
 import TotalStatistics from "./TotalStatistics";
 import React from "react";
+import EventMap from "./EventMap";
 
 const RobotRouter = (): React.ReactElement => {
     return (
@@ -11,6 +12,7 @@ const RobotRouter = (): React.ReactElement => {
             <Route path={"consumables"} element={<Consumables/>}/>
             <Route path={"manual_control"} element={<ManualControl/>}/>
             <Route path={"total_statistics"} element={<TotalStatistics/>}/>
+            <Route path={"event_map/:eventId"} element={<EventMap/>}/>
 
             <Route path="*" element={<Navigate to="/" />} />
         </Routes>

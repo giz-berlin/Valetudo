@@ -2,6 +2,7 @@ import React, { FunctionComponent } from "react";
 import { Button, ButtonGroup, Stack, styled, Typography } from "@mui/material";
 import { ConsumableSubType, ConsumableType, ValetudoEvent, ValetudoEventInteraction } from "../api";
 import {format8601Ish, formatRelative, getConsumableName} from "../utils";
+import { useNavigate } from "react-router-dom";
 
 export interface ValetudoEventRenderProps {
     event: ValetudoEvent;
@@ -71,6 +72,12 @@ const ErrorEventControl: FunctionComponent<ValetudoEventRenderProps> =
         const color = event.processed ? "textSecondary" : "error";
         const textStyle = event.processed ? {textDecoration: "line-through"} : {};
 
+        const navigate = useNavigate();
+        const navigateToEventMap = (eventId: string) =>{
+            const path = `/robot/event_map/${eventId}`;
+            navigate(path);
+        }
+
         return (
             <EventRow>
                 <Stack>
@@ -79,6 +86,14 @@ const ErrorEventControl: FunctionComponent<ValetudoEventRenderProps> =
                         An error occurred: {event.message || "Unknown error"}
                     </Typography>
                 </Stack>
+                <Button
+                    size="small"
+                    variant={"contained"}
+                    onClick={() => {navigateToEventMap(event.id)}}
+                    color="info"
+                >
+                    Show map
+                </Button>
                 <Button
                     size="small"
                     variant={"contained"}

@@ -127,7 +127,8 @@ class ValetudoRobot {
                 ) {
                     this.valetudoEventStore.raise(new ErrorStateValetudoEvent({
                         //@ts-ignore
-                        message: status.error?.message ?? "Unknown Error"
+                        message: status.error?.message ?? "Unknown Error",
+                        mapState: this.state.map
                     }));
                 }
             }),
