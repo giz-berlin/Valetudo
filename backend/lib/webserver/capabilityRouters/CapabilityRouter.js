@@ -9,13 +9,11 @@ class CapabilityRouter {
      *
      * @param {object} options
      * @param {import("../../core/capabilities/Capability") | any} options.capability
-     * @param {import("../../Configuration")} options.config
      * @param {*} options.validator
      */
     constructor(options) {
         this.router = express.Router({mergeParams: true});
         this.capability = options.capability;
-        this.config = options.config;
 
         this.validator = options.validator;
 

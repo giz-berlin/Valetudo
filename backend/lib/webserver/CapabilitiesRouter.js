@@ -11,13 +11,11 @@ class CapabilitiesRouter {
      *
      * @param {object} options
      * @param {import("../core/ValetudoRobot")} options.robot
-     * @param {import("../Configuration")} options.config
      * @param {*} options.validator
      */
     constructor(options) {
         this.robot = options.robot;
         this.router = express.Router({mergeParams: true});
-        this.config = options.config;
 
         this.validator = options.validator;
 
@@ -38,7 +36,7 @@ class CapabilitiesRouter {
             if (matchedRouter) {
                 this.router.use(
                     "/" + robotCapability.getType(),
-                    new matchedRouter({capability: robotCapability, validator: this.validator, config: this.config}).getRouter()
+                    new matchedRouter({capability: robotCapability, validator: this.validator}).getRouter()
                 );
 
             } else {
