@@ -690,6 +690,11 @@ export const fetchValetudoEvents = async (): Promise<Array<ValetudoEvent>> => {
     return valetudoAPI
         .get<Array<ValetudoEvent>>("/events")
         .then(({ data }) => {
+            for (const idx in data) {
+                if (data[idx].mapState) {
+                    data[idx].mapState = preprocessMap(data[idx].mapState!);
+                }
+            }
             return data;
         });
 };
@@ -698,6 +703,9 @@ export const fetchValetudoEvent = async (id: string): Promise<ValetudoEvent> => 
     return valetudoAPI
         .get<ValetudoEvent>(`/events/${id}`)
         .then(({ data }) => {
+            if (data.mapState) {
+                data.mapState = preprocessMap(data.mapState);
+            }
             return data;
         });
 };

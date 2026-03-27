@@ -980,7 +980,7 @@ export const useValetudoEventsQuery = () => {
 
 export const useValetudoEventQuery = (id: string) => {
     return useQuery( {
-        queryKey: [QueryKey.ValetudoEvent, String],
+        queryKey: [QueryKey.ValetudoEvent, id],
         queryFn: () => {
             return fetchValetudoEvent(id);
         }

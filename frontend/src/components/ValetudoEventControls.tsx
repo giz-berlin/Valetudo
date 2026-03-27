@@ -86,27 +86,27 @@ const ErrorEventControl: FunctionComponent<ValetudoEventRenderProps> =
                         An error occurred: {event.message || "Unknown error"}
                     </Typography>
                 </Stack>
-                <Button
-                    size="small"
-                    variant={"contained"}
-                    onClick={() => {navigateToEventMap(event.id)}}
-                    color="info"
-                >
-                    Show map
-                </Button>
-                <Button
-                    size="small"
-                    variant={"contained"}
-                    disabled={event.processed}
-                    onClick={() => {
-                        interact({
-                            interaction: "ok"
-                        });
-                    }}
-                    color="error"
-                >
-                    Dismiss
-                </Button>
+                <ButtonGroup size="small" variant="contained">
+                    <Button
+                        size="small"
+                        onClick={() => {navigateToEventMap(event.id)}}
+                        color="info"
+                    >
+                        Show map
+                    </Button>
+                    <Button
+                        size="small"
+                        disabled={event.processed}
+                        onClick={() => {
+                            interact({
+                                interaction: "ok"
+                            });
+                        }}
+                        color="error"
+                    >
+                        Dismiss
+                    </Button>
+                </ButtonGroup>
             </EventRow>
         );
     };

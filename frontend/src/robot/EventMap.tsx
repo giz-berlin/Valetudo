@@ -1,4 +1,4 @@
-import {Grid2, styled} from "@mui/material";
+import { Grid2 } from "@mui/material";
 import StaticMapPage from "../map/StaticMapPage";
 import React from "react";
 import { FullHeightGrid } from "../components/FullHeightGrid";
@@ -11,7 +11,6 @@ type EventMapParams = {
 
 const EventMap = (props: Record<string, never> ): React.ReactElement => {
     const { eventId } = useParams<EventMapParams>();
-    useValetudoEventQuery(eventId as string);
     const {
         data: eventData,
         isFetching: _eventDataFetching,
