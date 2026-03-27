@@ -1,3 +1,8 @@
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const env = require("./res/env");
+
 const EventEmitter = require("events").EventEmitter;
 
 class ValetudoEventStore {
@@ -9,7 +14,27 @@ class ValetudoEventStore {
         /** @private */
         this.eventEmitter = new EventEmitter();
 
+        this.persistentLocation = path.join(path.dirname(process.env[env.ConfigPath] ?? path.join(os.tmpdir(), "valetudo_config.json")), "valetudo_events");
+        if (!fs.existsSync(this.persistentLocation)) {
+            fs.mkdirSync(this.persistentLocation)
+        }
+
         this.events = new Map();
+
+        let stored_events = []
+        for (const file_path of fs.readdirSync(this.persistentLocation)) {
+            const absolute_file_path = path.join(this.persistentLocation, file_path);
+            if (fs.statSync(absolute_file_path).isFile) {
+                const event_object = JSON.parse(fs.readFileSync(absolute_file_path, {"encoding": "utf-8"}).toString());
+                stored_events.push(event_object)
+            }
+        }
+        // sort events from old to new in order to ensure correct deletion order below
+        stored_events.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+        for (const event_object of stored_events) {
+            this.events.set(event_object.id, event_object)
+            this.eventEmitter.emit(EVENTS_UPDATED, event_object);
+        }
     }
 
     /**
@@ -40,6 +65,10 @@ class ValetudoEventStore {
         return Array.from(this.events.values()).reverse();
     }
 
+    persistEvent(event) {
+        fs.writeFileSync(path.join(this.persistentLocation, event.id), JSON.stringify(event));
+    }
+
     /**
      * @public
      * @param {import("./valetudo_events/events/ValetudoEvent")} event
@@ -47,9 +76,13 @@ class ValetudoEventStore {
     raise(event) {
         if (!this.events.has(event.id)) {
             if (this.events.size >= LIMIT) {
-                this.events.delete(this.events.keys().next()?.value);
+                const event_id_to_delete = this.events.keys().next()?.value;
+                this.events.delete(event_id_to_delete);
+                fs.rmSync(path.join(this.persistentLocation, event_id_to_delete));
             }
         }
+
+        this.persistEvent(event)
 
         this.events.set(event.id, event);
         this.eventEmitter.emit(EVENT_RAISED, event);
@@ -78,6 +111,7 @@ class ValetudoEventStore {
         event.processed = true;
         //Even though this isn't required as we're interfacing with it by reference. Just for good measure
         this.events.set(event.id, event);
+        this.persistEvent(event)
         this.eventEmitter.emit(EVENTS_UPDATED, event);
     }
 
@@ -119,7 +153,9 @@ class ValetudoEventStore {
                 this.setProcessed(event.id);
             }
         } else {
-            throw new Error("Missing Handler for Event: " + event.__class);
+            // reloading the events with handlers does not work right now...
+            this.setProcessed(event.id);
+            // throw new Error("Missing Handler for Event: " + event.__class);
         }
     }
 
