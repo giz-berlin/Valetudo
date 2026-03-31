@@ -78,7 +78,10 @@ class ValetudoEventStore {
             if (this.events.size >= LIMIT) {
                 const event_id_to_delete = this.events.keys().next()?.value;
                 this.events.delete(event_id_to_delete);
-                fs.rmSync(path.join(this.persistentLocation, event_id_to_delete));
+                // Events on disk get also deleted when processed
+                if (fs.existsSync(path.join(this.persistentLocation, event_id_to_delete))) {
+                    fs.rmSync(path.join(this.persistentLocation, event_id_to_delete));
+                }
             }
         }
 
@@ -113,6 +116,9 @@ class ValetudoEventStore {
         this.events.set(event.id, event);
         this.persistEvent(event)
         this.eventEmitter.emit(EVENTS_UPDATED, event);
+        if (fs.existsSync(path.join(this.persistentLocation, event.id))) {
+            fs.rmSync(path.join(this.persistentLocation, event.id));
+        }
     }
 
     /**
